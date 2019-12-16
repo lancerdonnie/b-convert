@@ -17,11 +17,11 @@ const betkingbook = require('./betkingbook'); //async
   const page = await Context.newPage();
   //https://web.bet9ja.com/Sport/Odds?EventID=170880,593685
 
-  const names = await betkingbook;
-  // const names = [
-  //   ['Crystal Palace - Brighton', '1'],
-  //   ['Bidvest Wits - Mamelodi Sundowns', '1X']
-  // ];
+  // const names = await betkingbook;
+  const names = [
+    ['Crystal Palace - Brighton', '1'],
+    ['Bidvest Wits - Mamelodi Sundowns', '1X']
+  ];
   const url1 =
     'https://web.bet9ja.com/Sport/GroupsExt.aspx?IDSport=590&Antepost=0';
   const url2 = 'https://web.bet9ja.com/Sport/Odds?EventID=';
@@ -31,49 +31,50 @@ const betkingbook = require('./betkingbook'); //async
   await page.goto(url1, { waitForSelector: '.groupsList', timeout: 0 });
   //   await page.waitForSelector();
   let event = [];
-  let data = await page.evaluate(
-    (event, url2) => {
-      let a = document.querySelectorAll('[idevento]');
-      b = Array.from(a);
-      console.log(b, a);
-      console.log(event);
-      b.map(div => {
-        event.push(div.getAttribute('idevento'));
-      });
-      event = event.join();
-      url2 = url2.concat(event);
-      console.log(url2, event);
-      return {
-        event,
-        url2
-      };
-    },
-    event,
-    url2
-  );
-  // await page.goto(data.url2, { timeout: 0 });
-  await page.setRequestInterception(true);
+  // let data = await page.evaluate(
+  //   (event, url2) => {
+  //     let a = document.querySelectorAll('[idevento]');
+  //     b = Array.from(a);
+  //     console.log(b, a);
+  //     console.log(event);
+  //     b.map(div => {
+  //       event.push(div.getAttribute('idevento'));
+  //     });
+  //     event = event.join();
+  //     url2 = url2.concat(event);
+  //     console.log(url2, event);
+  //     return {
+  //       event,
+  //       url2
+  //     };
+  //   },
+  //   event,
+  //   url2
+  // );
+  // await page.setRequestInterception(true);
 
-  page.on('request', req => {
-    if (
-      req.resourceType() == 'stylesheet' ||
-      req.resourceType() == 'font' ||
-      req.resourceType() == 'image'
-    ) {
-      req.abort();
-    } else {
-      req.continue();
-    }
-  });
+  // page.on('request', req => {
+  //   if (
+  //     req.resourceType() == 'stylesheet' ||
+  //     req.resourceType() == 'font' ||
+  //     req.resourceType() == 'image'
+  //   ) {
+  //     req.abort();
+  //   } else {
+  //     req.continue();
+  //   }
+  // });
   await page.goto(
-    // 'https://web.bet9ja.com/Sport/Odds?EventID=170880,180962',
-    data.url2,
+    'https://web.bet9ja.com/Sport/Odds?EventID=170880,180962,661342',
+    // data.url2,
     {
       waitForSelector: '.oddsViewPanel',
       timeout: 0
     }
   );
+  page.waitForSelector('.oddsViewPanel');
   console.log(true);
+
   let data2 = await page.evaluate(names => {
     var a = document.querySelectorAll('[ng-bind-html]');
     var b = Array.from(a);
@@ -86,11 +87,17 @@ const betkingbook = require('./betkingbook'); //async
           .split(' ')
           .forEach(s => {
             var p = v.textContent.toLocaleLowerCase().match(`.*\\${s}\\b.*`);
-            if (p) calc++;
+            if (p) {
+              calc++;
+              console.log(p);
+            } else {
+            }
           });
         numb.push(calc);
       });
+      console.log(numb);
       let i = numb.indexOf(Math.max(...numb));
+      console.log(a[i]);
       switch (name[1]) {
         case '1':
           a[i].parentNode
@@ -145,16 +152,16 @@ const betkingbook = require('./betkingbook'); //async
       }
     });
   }, names);
-  await page.waitForSelector('#s_w_PC_cCoupon_lnkAvanti');
-  await page.evaluate(() => {
-    document.querySelector('#s_w_PC_cCoupon_lnkAvanti').click();
-    console.log(
-      'clicked',
-      document
-        .querySelector('#iframePrenotatoreSco')
-        .contentDocument.getElementById('bookHead')
-    );
-  });
+  // await page.waitForSelector('#s_w_PC_cCoupon_lnkAvanti');
+  // await page.evaluate(() => {
+  //   document.querySelector('#s_w_PC_cCoupon_lnkAvanti').click();
+  //   console.log(
+  //     'clicked',
+  //     document
+  //       .querySelector('#iframePrenotatoreSco')
+  //       .contentDocument.getElementById('bookHead')
+  //   );
+  // });
   await page.waitForSelector('#iframePrenotatoreSco');
   await page.waitFor(5000);
   // let frames = await page.frames().find(frame => frame.name() === 'iframePrenotatoreSco')
