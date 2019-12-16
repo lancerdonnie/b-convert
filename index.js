@@ -1,5 +1,5 @@
 const puppeteer = require('puppeteer-core');
-// const betkingbook = require('./betkingbook'); //async
+const betkingbook = require('./betkingbook'); //async
 // const e = async () => {
 //   console.log(await betkingbook);
 // };
@@ -7,69 +7,67 @@ const puppeteer = require('puppeteer-core');
 (async () => {
   const browser = await puppeteer.launch({
     executablePath:
-      'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+      // 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe'
+      'C:\\Users\\Mass\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe',
     headless: false,
     args: ['--auto-open-devtools-for-tabs', '--disable-dev-shm-usage']
   });
   const Context = await browser.createIncognitoBrowserContext();
   //   console.info(browser);
   const page = await Context.newPage();
-  //https://web.bet9ja.com/Sport/GroupsExt.aspx?IDSport=590&Antepost=0
-  //https://web.bet9ja.com/Sport/Odds?EventID=170880
   //https://web.bet9ja.com/Sport/Odds?EventID=170880,593685
 
-  //document.querySelector([""])
-  // const names = await betkingbook;
-  const names = [
-    ['Crystal Palace - Brighton', '1'],
-    ['Bidvest Wits - Mamelodi Sundowns', '1X']
-  ];
+  const names = await betkingbook;
+  // const names = [
+  //   ['Crystal Palace - Brighton', '1'],
+  //   ['Bidvest Wits - Mamelodi Sundowns', '1X']
+  // ];
   const url1 =
     'https://web.bet9ja.com/Sport/GroupsExt.aspx?IDSport=590&Antepost=0';
   const url2 = 'https://web.bet9ja.com/Sport/Odds?EventID=';
   //   await page.setUserAgent(
   //     'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1'
   //   );
-  // await page.goto(url1, { waitForSelector: '.groupsList', timeout: 0 });
-  // //   await page.waitForSelector();
-  // let event = [];
-  // let data = await page.evaluate(
-  //   (event, url2) => {
-  //     let a = document.querySelectorAll('[idevento]');
-  //     b = Array.from(a);
-  //     console.log(b, a);
-  //     console.log(event);
-  //     b.map(div => {
-  //       event.push(div.getAttribute('idevento'));
-  //     });
-  //     event = event.join();
-  //     url2 = url2.concat(event);
-  //     console.log(url2, event);
-  //     return {
-  //       event,
-  //       url2
-  //     };
-  //   },
-  //   event,
-  //   url2
-  // );
-  //   await page.goto(data.url2);
-  // await page.setRequestInterception(true);
+  await page.goto(url1, { waitForSelector: '.groupsList', timeout: 0 });
+  //   await page.waitForSelector();
+  let event = [];
+  let data = await page.evaluate(
+    (event, url2) => {
+      let a = document.querySelectorAll('[idevento]');
+      b = Array.from(a);
+      console.log(b, a);
+      console.log(event);
+      b.map(div => {
+        event.push(div.getAttribute('idevento'));
+      });
+      event = event.join();
+      url2 = url2.concat(event);
+      console.log(url2, event);
+      return {
+        event,
+        url2
+      };
+    },
+    event,
+    url2
+  );
+  // await page.goto(data.url2, { timeout: 0 });
+  await page.setRequestInterception(true);
 
-  // page.on('request', req => {
-  //   if (
-  //     req.resourceType() == 'stylesheet' ||
-  //     req.resourceType() == 'font' ||
-  //     req.resourceType() == 'image'
-  //   ) {
-  //     req.abort();
-  //   } else {
-  //     req.continue();
-  //   }
-  // });
+  page.on('request', req => {
+    if (
+      req.resourceType() == 'stylesheet' ||
+      req.resourceType() == 'font' ||
+      req.resourceType() == 'image'
+    ) {
+      req.abort();
+    } else {
+      req.continue();
+    }
+  });
   await page.goto(
-    'https://web.bet9ja.com/Sport/Odds?EventID=170880,180962',
-    // data.url2,
+    // 'https://web.bet9ja.com/Sport/Odds?EventID=170880,180962',
+    data.url2,
     {
       waitForSelector: '.oddsViewPanel',
       timeout: 0
@@ -158,15 +156,15 @@ const puppeteer = require('puppeteer-core');
     );
   });
   await page.waitForSelector('#iframePrenotatoreSco');
-  await page.waitFor(2000);
+  await page.waitFor(5000);
   // let frames = await page.frames().find(frame => frame.name() === 'iframePrenotatoreSco')
   // console.log(frames);
   const result = await page.evaluate(() => {
     var iframe = document.querySelector('#iframePrenotatoreSco');
     var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
     //Booking number
-    console.log(innerDoc.firstElementChild.textContent);
-    return innerDoc.firstElementChild.textContent;
+    // console.log(innerDoc.querySelector('.number').firstElementChild.textContent);
+    return innerDoc.querySelector('.number').firstElementChild.textContent;
   });
   console.log(result);
 

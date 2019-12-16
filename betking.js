@@ -1,8 +1,12 @@
 const puppeteer = require('puppeteer-core');
+const bet9jabook = require('./bet9jabook'); //async
+
 (async () => {
   const browser = await puppeteer.launch({
     executablePath:
-      'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+      // 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+      'C:\\Users\\Mass\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe',
+
     headless: false,
     args: ['--auto-open-devtools-for-tabs', '--disable-dev-shm-usage']
   });
@@ -33,13 +37,10 @@ const puppeteer = require('puppeteer-core');
   // await page.goto(url2, { waitUntil: 'domcontentloaded' });
   await page.waitForSelector('.team-names');
   // const names = [
-  //   ['Manchester United - Everton', 1],
-  //   ['Wolverhampton - Tottenham', '1X']
+  //   ['Crystal palace - Brighton', 1],
+  //   ['Bidvest Wits - Mamelodi Sundowns', '1X']
   // ];
-  const names = [
-    ['Crystal palace - Brighton', 1],
-    ['Bidvest Wits - Mamelodi Sundowns', '1X']
-  ];
+  const names = await bet9jabook;
   await page.evaluate(names => {
     var a = document.querySelectorAll('.team-names');
     a = Array.from(a);
@@ -47,6 +48,7 @@ const puppeteer = require('puppeteer-core');
       return el.innerHTML.toString().toLocaleLowerCase();
     });
     names.forEach(name => {
+      console.log('iteration');
       var numb = [];
       b.forEach(v => {
         var calc = 0;
@@ -62,10 +64,10 @@ const puppeteer = require('puppeteer-core');
       });
       let i = numb.indexOf(Math.max(...numb));
       switch (name[1]) {
-        case 1:
+        case '1':
           a[i].nextElementSibling.firstChild.children[0].click();
           break;
-        case 2:
+        case '2':
           a[i].nextElementSibling.firstChild.children[2].click();
           break;
         case 'X':

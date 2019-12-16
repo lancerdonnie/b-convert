@@ -3,7 +3,9 @@ let betk = async () => {
   let array = [];
   const browser = await puppeteer.launch({
     executablePath:
-      'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+      // 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+      'C:\\Users\\Mass\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe',
+
     headless: true,
     args: ['--auto-open-devtools-for-tabs', '--disable-dev-shm-usage']
   });
