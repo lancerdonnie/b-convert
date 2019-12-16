@@ -1,13 +1,13 @@
 const puppeteer = require('puppeteer-core');
 const bet9jabook = require('./bet9jabook'); //async
 
-(async () => {
+const betking = async () => {
   const browser = await puppeteer.launch({
     executablePath:
-      // 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
-      'C:\\Users\\Mass\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe',
+      'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+    // 'C:\\Users\\Mass\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe',
 
-    headless: false,
+    headless: true,
     args: ['--auto-open-devtools-for-tabs', '--disable-dev-shm-usage']
   });
   const Context = await browser.createIncognitoBrowserContext();
@@ -57,7 +57,9 @@ const bet9jabook = require('./bet9jabook'); //async
           .toLocaleLowerCase()
           .split(' ')
           .forEach(s => {
-            var p = v.toLocaleLowerCase().match(`.*\\${s}\\b.*`);
+            if (s == '-') return;
+            var p = v.toLocaleLowerCase().match(`\\b${s}\\b`);
+
             if (p) calc++;
           });
         numb.push(calc);
@@ -117,4 +119,5 @@ const bet9jabook = require('./bet9jabook'); //async
     return document.querySelectorAll('.value')[0].textContent;
   });
   console.log(result);
-})();
+};
+betking();
