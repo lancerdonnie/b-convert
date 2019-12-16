@@ -1,12 +1,12 @@
 const puppeteer = require('puppeteer-core');
-const betkingbook = require('./betkingbook'); //async
+// const betkingbook = require('./betkingbook'); //async
 
-const bet9ja = async () => {
+const bet9ja = async names => {
   const browser = await puppeteer.launch({
     executablePath:
-      'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
-    // 'C:\\Users\\Mass\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe',
-    headless: true,
+      // 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+      'C:\\Users\\Mass\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe',
+    headless: false,
     args: ['--auto-open-devtools-for-tabs', '--disable-dev-shm-usage']
   });
   const Context = await browser.createIncognitoBrowserContext();
@@ -14,17 +14,18 @@ const bet9ja = async () => {
   const page = await Context.newPage();
   //https://web.bet9ja.com/Sport/Odds?EventID=170880,593685
 
-  const names = await betkingbook;
-  // const names = [
-  //   ['Crystal Palace - Brighton', '1'],
-  //   ['Bidvest Wits - Mamelodi Sundowns', '1X']
-  // ];
+  // const names = await betkingbook;
+  names = [
+    ['Crystal Palace - Brighton', '1'],
+    ['Bidvest Wits - Mamelodi Sundowns', '1X']
+  ];
   const url1 =
     'https://web.bet9ja.com/Sport/GroupsExt.aspx?IDSport=590&Antepost=0';
   const url2 = 'https://web.bet9ja.com/Sport/Odds?EventID=';
   //   await page.setUserAgent(
   //     'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1'
   //   );
+
   await page.goto(url1, { waitForSelector: '.groupsList', timeout: 0 });
   //   await page.waitForSelector();
   let event = [];
@@ -48,19 +49,19 @@ const bet9ja = async () => {
     event,
     url2
   );
-  await page.setRequestInterception(true);
+  // await page.setRequestInterception(true);
 
-  page.on('request', req => {
-    if (
-      req.resourceType() == 'stylesheet' ||
-      req.resourceType() == 'font' ||
-      req.resourceType() == 'image'
-    ) {
-      req.abort();
-    } else {
-      req.continue();
-    }
-  });
+  // page.on('request', req => {
+  //   if (
+  //     req.resourceType() == 'stylesheet' ||
+  //     req.resourceType() == 'font' ||
+  //     req.resourceType() == 'image'
+  //   ) {
+  //     req.abort();
+  //   } else {
+  //     req.continue();
+  //   }
+  // });
   await page.goto(
     // 'https://web.bet9ja.com/Sport/Odds?EventID=170880,180962,661342',
     data.url2,
@@ -86,7 +87,11 @@ const bet9ja = async () => {
             if (s == '-') return;
             var p = v.textContent.toLocaleLowerCase().match(`\\b${s}`);
             // var p = v.textContent.toLocaleLowerCase().match(`\\b${s}\\b`);
-            if (p) calc++;
+            if (p) {
+              calc++;
+            } else {
+              console.log(s);
+            }
           });
         numb.push(calc);
       });
@@ -145,28 +150,30 @@ const bet9ja = async () => {
       }
     });
   }, names);
-  await page.waitForSelector('#s_w_PC_cCoupon_lnkAvanti');
-  await page.evaluate(() => {
-    document.querySelector('#s_w_PC_cCoupon_lnkAvanti').click();
-    console.log(
-      'clicked',
-      document
-        .querySelector('#iframePrenotatoreSco')
-        .contentDocument.getElementById('bookHead')
-    );
-  });
-  await page.waitForSelector('#iframePrenotatoreSco');
-  await page.waitFor(5000);
-  // let frames = await page.frames().find(frame => frame.name() === 'iframePrenotatoreSco')
-  // console.log(frames);
-  const result = await page.evaluate(() => {
-    var iframe = document.querySelector('#iframePrenotatoreSco');
-    var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
-    return innerDoc.querySelector('.number').firstElementChild.textContent;
-  });
-  console.log(result);
+  // await page.waitForSelector('#s_w_PC_cCoupon_lnkAvanti');
+  // await page.evaluate(() => {
+  //   document.querySelector('#s_w_PC_cCoupon_lnkAvanti').click();
+  //   console.log(
+  //     'clicked',
+  //     document
+  //       .querySelector('#iframePrenotatoreSco')
+  //       .contentDocument.getElementById('bookHead')
+  //   );
+  // });
+  // await page.waitForSelector('#iframePrenotatoreSco');
+  // await page.waitFor(5000);
+  // // let frames = await page.frames().find(frame => frame.name() === 'iframePrenotatoreSco')
+  // // console.log(frames);
+  // const result = await page.evaluate(() => {
+  //   var iframe = document.querySelector('#iframePrenotatoreSco');
+  //   var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+  //   return innerDoc.querySelector('.number').firstElementChild.textContent;
+  // });
+  // console.log(result);
 
-  await Context.close();
-  await browser.close();
+  // // await Context.close();
+  // // await browser.close();
+  // return result;
 };
 bet9ja();
+module.exports = bet9ja;

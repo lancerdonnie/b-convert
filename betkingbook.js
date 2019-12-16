@@ -1,10 +1,10 @@
 const puppeteer = require('puppeteer-core');
-let betk = async (betcode = 'jjmsr') => {
+let betk = async (betcode = 'JH2K9') => {
   let array = [];
   const browser = await puppeteer.launch({
     executablePath:
-      'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
-    // 'C:\\Users\\Mass\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe',
+      // 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+      'C:\\Users\\Mass\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe',
 
     headless: true,
     args: ['--auto-open-devtools-for-tabs', '--disable-dev-shm-usage']
@@ -33,13 +33,17 @@ let betk = async (betcode = 'jjmsr') => {
   await page.waitForSelector('.selection-container');
   let rar = await page.evaluate(() => {
     const arr = [];
-    var a = document.querySelectorAll('.selection-content');
+    // var a = document.querySelectorAll('.selection-content');
+    var a = document.querySelectorAll('.event-details-container');
+
     a = Array.from(a);
-    a.forEach(el => {
+    a.forEach((el, i) => {
+      console.log(el);
       var array = [];
-      array.push(el.querySelector('.match-name').textContent);
+      array.push(document.querySelectorAll('.match-name')[i].textContent);
       array.push(
-        el.querySelector('.market-selection').firstElementChild.textContent
+        document.querySelectorAll('.market-selection')[i].firstElementChild
+          .textContent
       );
       arr.push(array);
     });
@@ -48,7 +52,11 @@ let betk = async (betcode = 'jjmsr') => {
   await Context.close();
   await browser.close();
   array = rar;
+  console.log(array);
   return array;
 };
+// betk();
 let y = betk;
 module.exports = y;
+
+//11111s to load

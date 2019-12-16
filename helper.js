@@ -15,3 +15,6 @@ page.on('request', req => {
 
 //WAIT FOR some seconds after goto
 await page.waitFor(15000);
+
+//turn array around
+//run puppeteer on server

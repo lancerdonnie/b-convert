@@ -1,11 +1,11 @@
 const puppeteer = require('puppeteer-core');
-const bet9jabook = require('./bet9jabook'); //async
+// const bet9jabook = require('./bet9jabook'); //async
 
-const betking = async () => {
+const betking = async names => {
   const browser = await puppeteer.launch({
     executablePath:
-      'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
-    // 'C:\\Users\\Mass\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe',
+      // 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+      'C:\\Users\\Mass\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe',
 
     headless: true,
     args: ['--auto-open-devtools-for-tabs', '--disable-dev-shm-usage']
@@ -40,7 +40,7 @@ const betking = async () => {
   //   ['Crystal palace - Brighton', 1],
   //   ['Bidvest Wits - Mamelodi Sundowns', '1X']
   // ];
-  const names = await bet9jabook;
+  // const names = await bet9jabook;
   await page.evaluate(names => {
     var a = document.querySelectorAll('.team-names');
     a = Array.from(a);
@@ -118,6 +118,8 @@ const betking = async () => {
     console.log(document.querySelectorAll('.value')[0].textContent);
     return document.querySelectorAll('.value')[0].textContent;
   });
-  console.log(result);
+  return result;
+  // console.log(result);
 };
-betking();
+// betking();
+module.exports = betking;

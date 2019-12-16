@@ -1,5 +1,5 @@
 const puppeteer = require('puppeteer-core');
-let betk = async () => {
+let betk = async (betcode = 'Z3JP6QHZ') => {
   let array = [];
   const browser = await puppeteer.launch({
     executablePath:
@@ -11,7 +11,7 @@ let betk = async () => {
   });
   const Context = await browser.createIncognitoBrowserContext();
   const page = await Context.newPage();
-  const betcode = 'z3jphwd8'.toLocaleUpperCase();
+  betcode = betcode.toLocaleUpperCase();
   await page.goto('https://old-mobile.bet9ja.com/Schedina.aspx');
   await page.waitForSelector('.lnk.Load');
   await page.type('.TextBox', betcode);
@@ -39,5 +39,5 @@ let betk = async () => {
   array = rar;
   return array;
 };
-let y = betk();
-module.exports = y;
+// let y = betk();
+module.exports = betk;
