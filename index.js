@@ -1,14 +1,24 @@
 const puppeteer = require('puppeteer-core');
+const chromium = require('chrome-aws-lambda');
 // const betkingbook = require('./betkingbook'); //async
 
 const bet9ja = async names => {
-  const browser = await puppeteer.launch({
-    executablePath:
-      // 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
-      'C:\\Users\\Mass\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe',
-    headless: false,
-    args: ['--auto-open-devtools-for-tabs', '--disable-dev-shm-usage']
-  });
+  if (process.env.NODE_ENV === 'production') {
+    const browser = await chromium.puppeteer.launch({
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath,
+      headless: chromium.headless
+    });
+  } else {
+    const browser = await puppeteer.launch({
+      executablePath:
+        'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+      // 'C:\\Users\\Mass\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe',
+      headless: true,
+      args: ['--auto-open-devtools-for-tabs', '--disable-dev-shm-usage']
+    });
+  }
   const Context = await browser.createIncognitoBrowserContext();
   //   console.info(browser);
   const page = await Context.newPage();
@@ -16,7 +26,7 @@ const bet9ja = async names => {
 
   // const names = await betkingbook;
   names = [
-    ['Crystal Palace - Brighton', '1'],
+    ['Newcastle Utd - Crystal palace', '1'],
     ['Bidvest Wits - Mamelodi Sundowns', '1X']
   ];
   const url1 =
@@ -49,19 +59,19 @@ const bet9ja = async names => {
     event,
     url2
   );
-  // await page.setRequestInterception(true);
+  await page.setRequestInterception(true);
 
-  // page.on('request', req => {
-  //   if (
-  //     req.resourceType() == 'stylesheet' ||
-  //     req.resourceType() == 'font' ||
-  //     req.resourceType() == 'image'
-  //   ) {
-  //     req.abort();
-  //   } else {
-  //     req.continue();
-  //   }
-  // });
+  page.on('request', req => {
+    if (
+      req.resourceType() == 'stylesheet' ||
+      req.resourceType() == 'font' ||
+      req.resourceType() == 'image'
+    ) {
+      req.abort();
+    } else {
+      req.continue();
+    }
+  });
   await page.goto(
     // 'https://web.bet9ja.com/Sport/Odds?EventID=170880,180962,661342',
     data.url2,
@@ -150,30 +160,30 @@ const bet9ja = async names => {
       }
     });
   }, names);
-  // await page.waitForSelector('#s_w_PC_cCoupon_lnkAvanti');
-  // await page.evaluate(() => {
-  //   document.querySelector('#s_w_PC_cCoupon_lnkAvanti').click();
-  //   console.log(
-  //     'clicked',
-  //     document
-  //       .querySelector('#iframePrenotatoreSco')
-  //       .contentDocument.getElementById('bookHead')
-  //   );
-  // });
-  // await page.waitForSelector('#iframePrenotatoreSco');
-  // await page.waitFor(5000);
-  // // let frames = await page.frames().find(frame => frame.name() === 'iframePrenotatoreSco')
-  // // console.log(frames);
-  // const result = await page.evaluate(() => {
-  //   var iframe = document.querySelector('#iframePrenotatoreSco');
-  //   var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
-  //   return innerDoc.querySelector('.number').firstElementChild.textContent;
-  // });
-  // console.log(result);
+  await page.waitForSelector('#s_w_PC_cCoupon_lnkAvanti');
+  await page.evaluate(() => {
+    document.querySelector('#s_w_PC_cCoupon_lnkAvanti').click();
+    console.log(
+      'clicked',
+      document
+        .querySelector('#iframePrenotatoreSco')
+        .contentDocument.getElementById('bookHead')
+    );
+  });
+  await page.waitForSelector('#iframePrenotatoreSco');
+  await page.waitFor(5000);
+  // let frames = await page.frames().find(frame => frame.name() === 'iframePrenotatoreSco')
+  // console.log(frames);
+  const result = await page.evaluate(() => {
+    var iframe = document.querySelector('#iframePrenotatoreSco');
+    var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+    return innerDoc.querySelector('.number').firstElementChild.textContent;
+  });
+  console.log(result);
 
-  // // await Context.close();
-  // // await browser.close();
-  // return result;
+  // await Context.close();
+  // await browser.close();
+  return result;
 };
-bet9ja();
+// bet9ja();
 module.exports = bet9ja;
