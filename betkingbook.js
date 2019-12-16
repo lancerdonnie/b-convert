@@ -1,5 +1,5 @@
 const puppeteer = require('puppeteer-core');
-let betk = async () => {
+let betk = async (betcode = 'jjmsr') => {
   let array = [];
   const browser = await puppeteer.launch({
     executablePath:
@@ -11,7 +11,7 @@ let betk = async () => {
   });
   const Context = await browser.createIncognitoBrowserContext();
   const page = await Context.newPage();
-  const betcode = 'jjmsr'.toLocaleUpperCase();
+  betcode = betcode.toLocaleUpperCase();
   await page.goto('https://m.betking.com/book-bet');
   await page.waitForSelector('[type="text"]');
   //   await page.evaluate(betcode => {
@@ -50,5 +50,5 @@ let betk = async () => {
   array = rar;
   return array;
 };
-let y = betk();
+let y = betk;
 module.exports = y;

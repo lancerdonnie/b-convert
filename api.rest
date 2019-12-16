@@ -1,0 +1,11 @@
+GET http://localhost:3000/api
+
+###
+POST http://localhost:3000/
+content-type: application/json
+
+{
+    "from":"betking",
+    "to":"bet9ja",
+    "code":"jjmsr"
+}
