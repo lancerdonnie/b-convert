@@ -16,7 +16,12 @@ const bet9ja = async names => {
         'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
       // 'C:\\Users\\Mass\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe',
       headless: true,
-      args: ['--auto-open-devtools-for-tabs', '--disable-dev-shm-usage']
+      args: [
+        '--auto-open-devtools-for-tabs',
+        '--disable-dev-shm-usage',
+        '--no-sandbox',
+        '--disable-setuid-sandbox'
+      ]
     });
   }
   const Context = await browser.createIncognitoBrowserContext();

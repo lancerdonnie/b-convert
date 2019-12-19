@@ -7,7 +7,12 @@ let betk = async (betcode = 'JH2K9') => {
       'C:\\Users\\Mass\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe',
 
     headless: true,
-    args: ['--auto-open-devtools-for-tabs', '--disable-dev-shm-usage']
+    args: [
+      '--auto-open-devtools-for-tabs',
+      '--disable-dev-shm-usage',
+      '--no-sandbox',
+      '--disable-setuid-sandbox'
+    ]
   });
   const Context = await browser.createIncognitoBrowserContext();
   const page = await Context.newPage();

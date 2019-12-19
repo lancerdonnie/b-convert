@@ -7,7 +7,12 @@ let betk = async (betcode = 'Z3JP6QHZ') => {
       'C:\\Users\\Mass\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe',
 
     headless: true,
-    args: ['--auto-open-devtools-for-tabs', '--disable-dev-shm-usage']
+    args: [
+      '--auto-open-devtools-for-tabs',
+      '--disable-dev-shm-usage',
+      '--no-sandbox',
+      '--disable-setuid-sandbox'
+    ]
   });
   const Context = await browser.createIncognitoBrowserContext();
   const page = await Context.newPage();
@@ -16,6 +21,13 @@ let betk = async (betcode = 'Z3JP6QHZ') => {
   await page.waitForSelector('.lnk.Load');
   await page.type('.TextBox', betcode);
   await page.click('.lnk.Load');
+  //if a selection has expired
+  try {
+    await page.waitForSelector('.lnk.Ok', { timeout: 500 });
+    page.click('.lnk.Ok');
+  } catch (error) {
+    console.log("The element didn't appear.");
+  }
   await page.waitForSelector('.CItems');
 
   let rar = await page.evaluate(() => {
