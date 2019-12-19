@@ -1,10 +1,10 @@
 const puppeteer = require('puppeteer-core');
-let betk = async (betcode = 'Z3JP6QHZ') => {
+let betk = async (betcode = 'Z3J7z768') => {
   let array = [];
   const browser = await puppeteer.launch({
     executablePath:
-      // 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
-      'C:\\Users\\Mass\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe',
+      'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+      // 'C:\\Users\\Mass\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe',
 
     headless: true,
     args: [
@@ -51,5 +51,6 @@ let betk = async (betcode = 'Z3JP6QHZ') => {
   array = rar;
   return array;
 };
+betk()
 // let y = betk();
 module.exports = betk;

@@ -1,21 +1,13 @@
 const puppeteer = require('puppeteer-core');
-const chromium = require('chrome-aws-lambda');
 // const betkingbook = require('./betkingbook'); //async
 
 const bet9ja = async names => {
-  if (process.env.NODE_ENV === 'production') {
-    const browser = await chromium.puppeteer.launch({
-      args: chromium.args,
-      defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath,
-      headless: chromium.headless
-    });
-  } else {
+  
     const browser = await puppeteer.launch({
       executablePath:
         'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
       // 'C:\\Users\\Mass\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe',
-      headless: true,
+      headless: false,
       args: [
         '--auto-open-devtools-for-tabs',
         '--disable-dev-shm-usage',
@@ -23,7 +15,6 @@ const bet9ja = async names => {
         '--disable-setuid-sandbox'
       ]
     });
-  }
   const Context = await browser.createIncognitoBrowserContext();
   //   console.info(browser);
   const page = await Context.newPage();
@@ -68,24 +59,24 @@ const bet9ja = async names => {
 
   page.on('request', req => {
     if (
-      req.resourceType() == 'stylesheet' ||
-      req.resourceType() == 'font' ||
-      req.resourceType() == 'image'
+      req.resourceType() == "stylesheet"||
+      req.resourceType() == "font"||
+      req.resourceType() == "image"
+
     ) {
       req.abort();
+
     } else {
       req.continue();
+
     }
   });
   await page.goto(
     // 'https://web.bet9ja.com/Sport/Odds?EventID=170880,180962,661342',
-    data.url2,
-    {
-      waitForSelector: '.oddsViewPanel',
-      timeout: 0
-    }
+    data.url2,{waitForSelector:'.oddsViewPanel',timeout:0}
+    
   );
-  page.waitForSelector('.oddsViewPanel');
+  // await page.waitForSelector( '.oddsViewPanel',{timeout:0})
   console.log(true);
 
   let data2 = await page.evaluate(names => {
@@ -190,5 +181,5 @@ const bet9ja = async names => {
   // await browser.close();
   return result;
 };
-// bet9ja();
+bet9ja();
 module.exports = bet9ja;
